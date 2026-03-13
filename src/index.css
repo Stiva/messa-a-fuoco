@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: "Nunito", sans-serif;
+    @apply bg-yellow-100 text-green-900;
+  }
+  
+  /* Use thick scrollbar for fun theme */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-green-700/50 rounded-full;
+  }
+}
+
+@layer utilities {
+  .btn-primary {
+    @apply w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 px-6 rounded-3xl shadow-lg transform transition active:scale-95 text-xl flex items-center justify-center gap-2;
+  }
+  .btn-secondary {
+    @apply w-full bg-yellow-400 hover:bg-yellow-500 text-green-900 font-bold py-3 px-6 rounded-3xl shadow-md transform transition active:scale-95 text-lg flex items-center justify-center gap-2;
+  }
+  .card-wood {
+    @apply bg-[#FDF6E3] border-4 border-yellow-600/30 rounded-3xl p-6 shadow-xl relative overflow-hidden;
+  }
+  .input-wood {
+    @apply w-full bg-yellow-50/80 border-2 border-yellow-600/30 rounded-2xl p-4 text-green-900 focus:outline-none focus:ring-4 focus:ring-green-600/50 font-semibold resize-none shadow-inner;
+  }
+}
