@@ -1,5 +1,7 @@
-import React from 'react';
-import { BookOpen, FileCheck, Map, Compass } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { BookOpen, FileCheck, Map, Compass, Loader2 } from 'lucide-react';
+import html2canvas from 'html2canvas-pro';
+import { jsPDF } from 'jspdf';
 
 const focusData = {
   A: {
@@ -62,14 +64,33 @@ const tappe = [
 
 export default function Step3Design({ actions, plan, profile }) {
   const focus = profile ? focusData[profile] : null;
+  const contentRef = useRef(null);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const handleSave = (e) => {
     e.preventDefault();
-    actions.nextStep();
+    setIsGeneratingPDF(true);
+
+    try {
+      // Small timeout to show the loading state
+      setTimeout(() => {
+        // We use native print. CSS will handle hiding non-essential elements
+        document.body.classList.add('printing-step3');
+        window.print();
+        document.body.classList.remove('printing-step3');
+        
+        setIsGeneratingPDF(false);
+        actions.nextStep();
+      }, 100);
+    } catch (error) {
+      console.error("Failed to generate PDF via print", error);
+      setIsGeneratingPDF(false);
+      actions.nextStep();
+    }
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto animate-in fade-in slide-in-from-right duration-300 space-y-6">
+    <div ref={contentRef} className="w-full max-w-2xl mx-auto animate-in fade-in slide-in-from-right duration-300 space-y-6">
 
       {/* === PARTE 1: FOCUS === */}
       {focus && (
@@ -177,9 +198,18 @@ export default function Step3Design({ actions, plan, profile }) {
           );
         })}
 
-        <button type="submit" className="btn-primary mt-4 text-xl py-4">
-          <FileCheck size={24} />
-          Salva il piano e prosegui
+        <button type="submit" disabled={isGeneratingPDF} className="btn-primary mt-4 text-xl py-4 flex items-center justify-center gap-2 disabled:bg-green-600 disabled:opacity-80 disabled:cursor-wait">
+          {isGeneratingPDF ? (
+            <>
+              <Loader2 className="animate-spin" size={24} />
+              Salvataggio e Generazione PDF...
+            </>
+          ) : (
+            <>
+              <FileCheck size={24} />
+              Scarica Piano e Prosegui
+            </>
+          )}
         </button>
       </form>
     </div>

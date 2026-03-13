@@ -33,3 +33,37 @@
     @apply w-full bg-yellow-50/80 border-2 border-yellow-600/30 rounded-2xl p-4 text-green-900 focus:outline-none focus:ring-4 focus:ring-green-600/50 font-semibold resize-none shadow-inner;
   }
 }
+
+/* Print CSS for Step 3 PDF Export */
+@media print {
+  body.printing-step3 {
+    background: white;
+  }
+  body.printing-step3 header,
+  body.printing-step3 footer,
+  body.printing-step3 button,
+  body.printing-step3 .progress-path-container {
+    display: none !important;
+  }
+  
+  body.printing-step3 main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  body.printing-step3 .card-wood {
+    box-shadow: none !important;
+    border: 2px solid #e5e7eb !important;
+    break-inside: avoid;
+    margin-bottom: 2rem;
+  }
+
+  body.printing-step3 textarea {
+    border: none !important;
+    background: #fefce8 !important; /* yellow-50 */
+    box-shadow: none !important;
+    resize: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
