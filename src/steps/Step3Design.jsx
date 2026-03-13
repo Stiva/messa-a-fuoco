@@ -1,9 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { BookOpen, FileCheck, Map, Compass, Loader2 } from 'lucide-react';
-import html2canvas from 'html2canvas-pro';
-import { jsPDF } from 'jspdf';
 
-const focusData = {
+// Hardcoded fallback
+const FALLBACK_FOCUS = {
   A: {
     name: "Giustizia Riparativa",
     subtitle: "Dal giudizio alla cura: il conflitto può diventare crescita se si rimane in relazione.",
@@ -62,7 +61,8 @@ const tappe = [
   "Tappa 5 — Chiusura e Verifica"
 ];
 
-export default function Step3Design({ actions, plan, profile }) {
+export default function Step3Design({ actions, plan, profile, cmsFocus, cmsInstructions }) {
+  const focusData = (cmsFocus && Object.keys(cmsFocus).length > 0) ? cmsFocus : FALLBACK_FOCUS;
   const focus = profile ? focusData[profile] : null;
   const contentRef = useRef(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
@@ -72,9 +72,7 @@ export default function Step3Design({ actions, plan, profile }) {
     setIsGeneratingPDF(true);
 
     try {
-      // Small timeout to show the loading state
       setTimeout(() => {
-        // We use native print. CSS will handle hiding non-essential elements
         document.body.classList.add('printing-step3');
         window.print();
         document.body.classList.remove('printing-step3');

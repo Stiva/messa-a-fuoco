@@ -1,0 +1,12 @@
+{
+  "$schema": "https://studiocdn.sanity.io/manifest.json",
+  "root": true,
+  "project": {
+    "name": "Crescere Strumenti di Pace"
+  },
+  "api": {
+    "projectId": "5l3x7g7u",
+    "dataset": "production"
+  },
+  "plugins": []
+}

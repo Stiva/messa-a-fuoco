@@ -1,7 +1,23 @@
 import React, { useState } from 'react';
 import { Camera, ExternalLink, CheckCircle2, Users, UserCog } from 'lucide-react';
 
-export default function Step4Output() {
+// Hardcoded fallback
+const FALLBACK = {
+  headerTitle: 'Restituzione',
+  headerText: 'La restituzione non è "scartoffie": è il modo in cui trasformiamo quello che è successo in crescita. Se non raccogliamo niente, resta solo "una bella attività". Se invece lo fissiamo bene, diventa un passo educativo per il Branco/Cerchio.',
+  action1Title: 'Azione 1 — Per i L/C',
+  action1Text: 'Fate la verifica giocata con le tessere costruendo la Mappa della Pace.',
+  action1SubText: "L'obiettivo è semplice: capire quali concetti stanno insieme, cosa è stato facile, cosa difficile, e cosa serve adesso al gruppo.",
+  action2Title: 'Azione 2 — Per i Capi',
+  action2Text: 'Compilate il modulo online.',
+  action2SubText: 'Non vogliamo "è andata bene" o "male". Vorremmo cose viste: chi ha fatto cosa, cosa ha funzionato, dove si è inceppato. E soprattutto: scegliete un micro-impegno per le prossime 2 riunioni — una frase, una regola, un gesto… piccolo ma vero.',
+  action2Note: 'Fine. Pochi minuti, ma tanta utilità.',
+  formUrl: 'https://example.com',
+  closingText: 'Buona Caccia e Buon Volo! 🐾🍃',
+};
+
+export default function Step4Output({ cms }) {
+  const d = { ...FALLBACK, ...cms };
   const [photoLoaded, setPhotoLoaded] = useState(false);
 
   return (
@@ -13,12 +29,10 @@ export default function Step4Output() {
           <CheckCircle2 size={64} />
         </div>
         <h2 className="text-3xl md:text-4xl font-black text-green-800 mb-3 tracking-tight">
-          Restituzione
+          {d.headerTitle}
         </h2>
         <p className="text-base md:text-lg text-green-900 font-medium leading-relaxed">
-          La restituzione non è "scartoffie": è il modo in cui trasformiamo quello che è successo in <strong>crescita</strong>.
-          Se non raccogliamo niente, resta solo "una bella attività".
-          Se invece lo fissiamo bene, diventa un <strong>passo educativo</strong> per il Branco/Cerchio.
+          {d.headerText}
         </p>
       </div>
 
@@ -26,16 +40,11 @@ export default function Step4Output() {
       <div className="card-wood">
         <div className="flex items-center gap-3 mb-4 border-b-2 border-yellow-700/20 pb-3">
           <Users size={24} className="text-green-700 shrink-0" />
-          <h3 className="text-xl font-black text-green-800">Azione 1 — Per i L/C</h3>
+          <h3 className="text-xl font-black text-green-800">{d.action1Title}</h3>
         </div>
         <div className="space-y-3 text-green-900 font-medium text-base leading-relaxed">
-          <p>
-            Fate la <strong>verifica giocata con le tessere</strong> costruendo la <strong>Mappa della Pace</strong>.
-          </p>
-          <p className="text-sm">
-            L'obiettivo è semplice: capire <strong>quali concetti stanno insieme</strong>, cosa è stato facile, cosa difficile,
-            e cosa serve adesso al gruppo.
-          </p>
+          <p>{d.action1Text}</p>
+          <p className="text-sm">{d.action1SubText}</p>
         </div>
         <div className="mt-5">
           <button
@@ -57,25 +66,16 @@ export default function Step4Output() {
       <div className="card-wood">
         <div className="flex items-center gap-3 mb-4 border-b-2 border-yellow-700/20 pb-3">
           <UserCog size={24} className="text-green-700 shrink-0" />
-          <h3 className="text-xl font-black text-green-800">Azione 2 — Per i Capi</h3>
+          <h3 className="text-xl font-black text-green-800">{d.action2Title}</h3>
         </div>
         <div className="space-y-3 text-green-900 font-medium text-base leading-relaxed">
-          <p>
-            <strong>Compilate il modulo online.</strong>
-          </p>
-          <p className="text-sm">
-            Non vogliamo "è andata bene" o "male". Vorremmo <strong>cose viste</strong>: chi ha fatto cosa, cosa ha funzionato, dove si è inceppato.
-          </p>
-          <p className="text-sm">
-            E soprattutto: scegliete un <strong>micro-impegno</strong> per le prossime 2 riunioni — una frase, una regola, un gesto… piccolo ma vero.
-          </p>
-          <p className="text-xs text-green-700 italic">
-            Fine. Pochi minuti, ma tanta utilità.
-          </p>
+          <p><strong>{d.action2Text}</strong></p>
+          <p className="text-sm">{d.action2SubText}</p>
+          <p className="text-xs text-green-700 italic">{d.action2Note}</p>
         </div>
         <div className="mt-5">
           <a
-            href="https://example.com"
+            href={d.formUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary block no-underline hover:no-underline text-lg"
@@ -90,7 +90,7 @@ export default function Step4Output() {
 
       {/* Closing */}
       <div className="text-center py-4">
-        <p className="text-green-800 font-black text-2xl">Buona Caccia e Buon Volo! 🐾🍃</p>
+        <p className="text-green-800 font-black text-2xl">{d.closingText}</p>
       </div>
     </div>
   );

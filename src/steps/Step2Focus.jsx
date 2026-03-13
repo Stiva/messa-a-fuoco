@@ -1,7 +1,8 @@
 import React from 'react';
 import { Target, ArrowRight } from 'lucide-react';
 
-const questions = [
+// Hardcoded fallback questions
+const FALLBACK_QUESTIONS = [
   {
     id: 'q1',
     text: "Dopo un litigio, di solito il gruppo…",
@@ -94,7 +95,7 @@ const questions = [
   }
 ];
 
-const PROFILES = {
+const FALLBACK_PROFILES = {
   A: {
     name: "GIUSTIZIA RIPARATIVA",
     tagline: "Dal giudizio alla cura: il conflitto può diventare crescita se si rimane in relazione.",
@@ -112,7 +113,10 @@ const PROFILES = {
   }
 };
 
-export default function Step2Focus({ actions, quizAnswers }) {
+export default function Step2Focus({ actions, quizAnswers, cmsQuestions, cmsProfiles }) {
+  const questions = (cmsQuestions && cmsQuestions.length > 0) ? cmsQuestions : FALLBACK_QUESTIONS;
+  const PROFILES = (cmsProfiles && Object.keys(cmsProfiles).length > 0) ? cmsProfiles : FALLBACK_PROFILES;
+
   const answeredCount = questions.filter(q => quizAnswers[q.id]).length;
   const currentQ = Math.min(answeredCount, questions.length - 1);
   const allAnswered = answeredCount === questions.length;
