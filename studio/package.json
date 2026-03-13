@@ -11,8 +11,7 @@
     "deploy": "sanity deploy"
   },
   "dependencies": {
-    "sanity": "^3.80.0",
-    "@sanity/vision": "^3.80.0"
-  },
-  "devDependencies": {}
+    "@sanity/vision": "^5.15.0",
+    "sanity": "^5.15.0"
+  }
 }
