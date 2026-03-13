@@ -144,7 +144,7 @@ export default function Step2Focus({ actions, quizAnswers }) {
       <div className="flex items-center gap-2 text-green-800 mb-4 border-b-2 border-yellow-700/20 pb-4">
         <Target size={28} />
         <div>
-          <h2 className="text-2xl font-bold">Messa a Fuoco</h2>
+          <h2 className="text-2xl font-bold">Crescere strumenti di Pace</h2>
           <p className="text-sm text-green-700 font-medium">Per ogni domanda scegli A, B o C</p>
         </div>
       </div>
