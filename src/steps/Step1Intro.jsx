@@ -13,9 +13,10 @@ const FALLBACK = {
   ],
   closingNote: 'È un lavoro da artigiani, fatto di piccoli gesti e scelte ripetute, finché diventano stile.',
   buttonLabel: 'Zaino in spalla, Inizia!',
+  skipToRestitutionLabel: 'Hai già svolto l\'attività? Allora sei pronto per la Restituzione',
 };
 
-export default function Step1Intro({ proceed, cms }) {
+export default function Step1Intro({ proceed, skipToRestitution, cms }) {
   const d = { ...FALLBACK, ...cms };
 
   return (
@@ -46,6 +47,16 @@ export default function Step1Intro({ proceed, cms }) {
         <Backpack fill="currentColor" size={28} />
         {d.buttonLabel}
       </button>
+
+      {skipToRestitution && (
+        <button
+          type="button"
+          onClick={skipToRestitution}
+          className="mt-6 w-full py-3 text-base text-green-700 hover:text-green-800 underline underline-offset-2 transition-colors"
+        >
+          {d.skipToRestitutionLabel}
+        </button>
+      )}
     </div>
   );
 }

@@ -38,6 +38,12 @@ export default defineType({
       title: 'Etichetta bottone',
       type: 'string',
     }),
+    defineField({
+      name: 'skipToRestitutionLabel',
+      title: 'Testo link "salta al caricamento"',
+      type: 'string',
+      description: 'Per chi ha già svolto l\'attività e vuole solo caricare la foto',
+    }),
   ],
   preview: {
     select: {title: 'title'},

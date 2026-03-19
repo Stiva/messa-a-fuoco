@@ -27,7 +27,13 @@ function App() {
   const renderStep = () => {
     switch (state.currentStep) {
       case 1:
-        return <Step1Intro proceed={actions.nextStep} cms={content?.step1} />;
+        return (
+          <Step1Intro
+            proceed={actions.nextStep}
+            skipToRestitution={() => actions.jumpToStep(4)}
+            cms={content?.step1}
+          />
+        );
       case 2:
         return (
           <Step2Focus 
@@ -50,7 +56,13 @@ function App() {
       case 4:
         return <Step4Output cms={content?.step4} />;
       default:
-        return <Step1Intro proceed={actions.nextStep} cms={content?.step1} />;
+        return (
+          <Step1Intro
+            proceed={actions.nextStep}
+            skipToRestitution={() => actions.jumpToStep(4)}
+            cms={content?.step1}
+          />
+        );
     }
   };
 
