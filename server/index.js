@@ -54,13 +54,29 @@ app.post('/api/upload', (req, res, next) => {
   }
 
   try {
+    const name = (req.body?.name || '').trim();
+    const lastName = (req.body?.lastName || '').trim();
+    const email = (req.body?.email || '').trim();
+    const scoutGroup = (req.body?.scoutGroup || '').trim();
+
+    if (!name || !lastName || !email || !scoutGroup) {
+      return res.status(400).json({
+        error: 'Compila tutti i campi: Nome, Cognome, Email, Gruppo Scout',
+      });
+    }
+
     const imageAsset = await sanityClient.assets.upload('image', req.file.buffer, {
       filename: req.file.originalname,
     });
 
     await sanityClient.create({
       _type: 'mappaPacePhoto',
-      title: `Caricata il ${new Date().toLocaleString('it-IT')}`,
+      title: `${name} ${lastName} · ${scoutGroup}`,
+      uploaderName: name,
+      uploaderLastName: lastName,
+      uploaderEmail: email,
+      scoutGroup,
+      uploadedAt: new Date().toISOString(),
       image: {
         _type: 'image',
         asset: {

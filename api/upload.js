@@ -19,9 +19,20 @@ export async function POST(request) {
   try {
     const formData = await request.formData();
     const file = formData.get('image');
+    const name = (formData.get('name') || '').toString().trim();
+    const lastName = (formData.get('lastName') || '').toString().trim();
+    const email = (formData.get('email') || '').toString().trim();
+    const scoutGroup = (formData.get('scoutGroup') || '').toString().trim();
 
     if (!file || typeof file.arrayBuffer !== 'function') {
       return Response.json({ error: 'Nessun file ricevuto' }, { status: 400 });
+    }
+
+    if (!name || !lastName || !email || !scoutGroup) {
+      return Response.json(
+        { error: 'Compila tutti i campi: Nome, Cognome, Email, Gruppo Scout' },
+        { status: 400 }
+      );
     }
 
     const arrayBuffer = await file.arrayBuffer();
@@ -41,7 +52,12 @@ export async function POST(request) {
 
     await sanityClient.create({
       _type: 'mappaPacePhoto',
-      title: `Caricata il ${new Date().toLocaleString('it-IT')}`,
+      title: `${name} ${lastName} · ${scoutGroup}`,
+      uploaderName: name,
+      uploaderLastName: lastName,
+      uploaderEmail: email,
+      scoutGroup,
+      uploadedAt: new Date().toISOString(),
       image: {
         _type: 'image',
         asset: {

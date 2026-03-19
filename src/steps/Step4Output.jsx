@@ -21,19 +21,42 @@ export default function Step4Output({ cms }) {
   const [photoLoaded, setPhotoLoaded] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    lastName: '',
+    email: '',
+    scoutGroup: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value.trim() }));
+  };
+
+  const isFormValid = formData.name && formData.lastName && formData.email && formData.scoutGroup;
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    if (!isFormValid) {
+      alert('Compila tutti i campi (Nome, Cognome, Email, Gruppo Scout) prima di caricare.');
+      e.target.value = '';
+      return;
+    }
+
     try {
       setUploading(true);
-      const formData = new FormData();
-      formData.append('image', file);
+      const fd = new FormData();
+      fd.append('image', file);
+      fd.append('name', formData.name);
+      fd.append('lastName', formData.lastName);
+      fd.append('email', formData.email);
+      fd.append('scoutGroup', formData.scoutGroup);
 
       const res = await fetch('/api/upload', {
         method: 'POST',
-        body: formData,
+        body: fd,
       });
 
       if (!res.ok) {
@@ -47,6 +70,7 @@ export default function Step4Output({ cms }) {
       alert(err.message || 'Si è verificato un errore durante il caricamento della foto. Riprova.');
     } finally {
       setUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -76,7 +100,45 @@ export default function Step4Output({ cms }) {
           <p>{d.action1Text}</p>
           <p className="text-sm">{d.action1SubText}</p>
         </div>
-        <div className="mt-5">
+        <div className="mt-5 space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <input
+              type="text"
+              name="name"
+              placeholder="Nome"
+              value={formData.name}
+              onChange={handleInputChange}
+              disabled={photoLoaded || uploading}
+              className="w-full px-4 py-2 rounded-xl border-2 border-yellow-700/30 bg-white/80 text-green-900 placeholder:text-green-700/60 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-500/30 outline-none disabled:opacity-60"
+            />
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Cognome"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              disabled={photoLoaded || uploading}
+              className="w-full px-4 py-2 rounded-xl border-2 border-yellow-700/30 bg-white/80 text-green-900 placeholder:text-green-700/60 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-500/30 outline-none disabled:opacity-60"
+            />
+          </div>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleInputChange}
+            disabled={photoLoaded || uploading}
+            className="w-full px-4 py-2 rounded-xl border-2 border-yellow-700/30 bg-white/80 text-green-900 placeholder:text-green-700/60 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-500/30 outline-none disabled:opacity-60"
+          />
+          <input
+            type="text"
+            name="scoutGroup"
+            placeholder="Gruppo Scout"
+            value={formData.scoutGroup}
+            onChange={handleInputChange}
+            disabled={photoLoaded || uploading}
+            className="w-full px-4 py-2 rounded-xl border-2 border-yellow-700/30 bg-white/80 text-green-900 placeholder:text-green-700/60 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-500/30 outline-none disabled:opacity-60"
+          />
           <input
             type="file"
             accept="image/*"
@@ -87,9 +149,9 @@ export default function Step4Output({ cms }) {
           />
           <button
             onClick={() => fileInputRef.current?.click()}
-            disabled={photoLoaded || uploading}
+            disabled={photoLoaded || uploading || !isFormValid}
             className={`w-full font-bold py-4 px-6 rounded-3xl shadow-md transform transition-all duration-300 active:scale-95 text-lg flex items-center justify-center gap-3
-              ${(photoLoaded || uploading)
+              ${(photoLoaded || uploading || !isFormValid)
                 ? 'bg-green-100 text-green-800 ring-4 ring-green-400 cursor-not-allowed shadow-inner'
                 : 'bg-yellow-400 hover:bg-yellow-500 text-green-900 border-b-4 border-yellow-600 hover:border-yellow-700 hover:-translate-y-1'
               }`}

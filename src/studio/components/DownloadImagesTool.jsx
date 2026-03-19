@@ -20,6 +20,10 @@ export function DownloadImagesTool() {
         *[_type == "mappaPacePhoto"] | order(uploadedAt desc) {
           _id,
           title,
+          uploaderName,
+          uploaderLastName,
+          uploaderEmail,
+          scoutGroup,
           uploadedAt,
           "url": image.asset->url,
           "filename": image.asset->originalFilename
@@ -114,9 +118,14 @@ export function DownloadImagesTool() {
                 }} 
               />
               <div style={{ padding: '0.5rem', fontSize: '14px' }}>
-                <p style={{ margin: '0 0 0.5rem 0', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {img.title || 'Senza titolo'}
+                <p style={{ margin: '0 0 0.25rem 0', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {[img.uploaderName, img.uploaderLastName].filter(Boolean).join(' ') || img.title || 'Senza titolo'}
                 </p>
+                {img.scoutGroup && (
+                  <p style={{ margin: '0 0 0.25rem 0', fontSize: '12px', color: '#666' }}>
+                    {img.scoutGroup}
+                  </p>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '12px', color: '#666' }}>
                     {img.uploadedAt ? new Date(img.uploadedAt).toLocaleDateString('it-IT') : ''}
