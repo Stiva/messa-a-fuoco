@@ -1,3 +1,47 @@
+# Messa a Fuoco
+
+React + Vite app with Sanity CMS integration.
+
+## Upload delle foto (Mappa della Pace)
+
+Il caricamento delle immagini passa da un backend Express per mantenere il token Sanity al sicuro sul server.
+
+### Setup
+
+1. Copia `.env.example` in `.env`
+2. Compila le variabili (vedi sotto)
+3. Crea un token Sanity con permessi **Editor** su [sanity.io/manage](https://sanity.io/manage) → API → Tokens
+4. Usa quel token solo in `SANITY_TOKEN` (mai in `VITE_*`)
+
+### Variabili d'ambiente
+
+| Variabile | Dove | Note |
+|-----------|------|------|
+| `VITE_SANITY_PROJECT_ID` | Frontend | Pubblico |
+| `VITE_SANITY_DATASET` | Frontend | Pubblico |
+| `SANITY_PROJECT_ID` | Backend | Stesso del frontend |
+| `SANITY_DATASET` | Backend | Stesso del frontend |
+| `SANITY_TOKEN` | Backend | **Segreto** – permessi Editor |
+
+### Avvio
+
+```bash
+npm install
+npm run dev
+```
+
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3001 (proxy automatico su `/api`)
+
+### Produzione
+
+```bash
+npm run build
+npm run start
+```
+
+---
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

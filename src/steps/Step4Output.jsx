@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { Camera, ExternalLink, CheckCircle2, Users, UserCog, Loader2 } from 'lucide-react';
-import { sanityClient } from '../lib/sanity';
 
 // Hardcoded fallback
 const FALLBACK = {
@@ -29,26 +28,23 @@ export default function Step4Output({ cms }) {
 
     try {
       setUploading(true);
-      const imageAsset = await sanityClient.assets.upload('image', file, {
-        filename: file.name
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
       });
-      
-      await sanityClient.create({
-        _type: 'mappaPacePhoto',
-        title: `Caricata il ${new Date().toLocaleString('it-IT')}`,
-        image: {
-          _type: 'image',
-          asset: {
-            _type: 'reference',
-            _ref: imageAsset._id
-          }
-        }
-      });
-      
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Errore ${res.status}`);
+      }
+
       setPhotoLoaded(true);
     } catch (err) {
       console.error('Errore durante il caricamento:', err);
-      alert('Si è verificato un errore durante il caricamento della foto. Riprova.');
+      alert(err.message || 'Si è verificato un errore durante il caricamento della foto. Riprova.');
     } finally {
       setUploading(false);
     }
