@@ -48,13 +48,15 @@ export default function Step1Intro({ proceed, skipToRestitution, cms }) {
       </button>
 
       {skipToRestitution && (
-        <button
-          type="button"
-          onClick={skipToRestitution}
-          className="mt-6 w-full py-3 text-base text-green-700 hover:text-green-800 underline underline-offset-2 transition-colors"
-        >
-          {d.skipToRestitutionLabel}
-        </button>
+        <div className="mt-6 pt-6 border-t-2 border-yellow-600/20">
+          <button
+            type="button"
+            onClick={skipToRestitution}
+            className="w-full py-3 text-base font-semibold text-green-700 hover:text-green-800 underline underline-offset-2 transition-colors"
+          >
+            {d.skipToRestitutionLabel || FALLBACK.skipToRestitutionLabel}
+          </button>
+        </div>
       )}
     </div>
   );
