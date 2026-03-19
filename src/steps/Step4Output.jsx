@@ -14,6 +14,10 @@ const FALLBACK = {
   action2Note: 'Fine. Pochi minuti, ma tanta utilità.',
   formUrl: 'https://example.com',
   closingText: 'Buona Caccia e Buon Volo! 🐾🍃',
+  action2ButtonLabel: 'Compila Modulo di Verifica Capi',
+  uploadButtonLabel: 'Carica la foto della Mappa della Pace',
+  uploadedLabel: 'Foto Caricata! 📸',
+  uploadingLabel: 'Caricamento in corso...',
 };
 
 export default function Step4Output({ cms }) {
@@ -157,11 +161,11 @@ export default function Step4Output({ cms }) {
               }`}
           >
             {uploading ? (
-              <><Loader2 className="animate-spin" size={22} /> Caricamento in corso...</>
+              <><Loader2 className="animate-spin" size={22} /> {d.uploadingLabel}</>
             ) : photoLoaded ? (
-              <><Camera size={22} /> Foto Caricata! 📸</>
+              <><Camera size={22} /> {d.uploadedLabel}</>
             ) : (
-              <><Camera size={22} /> Carica la foto della Mappa della Pace</>
+              <><Camera size={22} /> {d.uploadButtonLabel}</>
             )}
           </button>
         </div>
@@ -186,7 +190,7 @@ export default function Step4Output({ cms }) {
             className="btn-primary block no-underline hover:no-underline text-lg"
           >
             <span className="flex items-center justify-center gap-2">
-              Compila Modulo di Verifica Capi
+              {d.action2ButtonLabel}
               <ExternalLink size={20} />
             </span>
           </a>

@@ -43,7 +43,7 @@ export default function useSanityContent() {
       // Fetch all content types in a single request using GROQ
       const query = `{
         "step1": *[_type == "step1Intro"][0]{
-          title, subtitle, bodyParagraphs, buttonLabel
+          title, subtitle, supTitle, closingNote, bodyParagraphs, buttonLabel, skipToRestitutionLabel, greeting
         },
         "quizQuestions": *[_type == "quizQuestion"] | order(order asc) {
           questionId, text, order,
@@ -52,19 +52,27 @@ export default function useSanityContent() {
         "quizProfiles": *[_type == "quizProfile"] {
           key, name, tagline, emoji
         },
+        "step2Config": *[_type == "step2QuizConfig"][0]{
+          headerTitle, headerSubtitle, resultTitle, tieNote, proceedButtonLabel
+        },
         "focusCards": *[_type == "step3Focus"] {
           profileKey, name, subtitle,
           punti, 
           extra[]{ title, note }
         },
         "gameInstructions": *[_type == "gameInstructions"][0]{
-          sections[]{ title, icon, items }
+          sections[]{ title, icon, content, items }
+        },
+        "step3Config": *[_type == "step3DesignConfig"][0]{
+          instructionsTitle, formTitle, formSubtitle, textareaPlaceholder,
+          saveButtonLabel, savingLabel, extraSectionTitle, tappe
         },
         "step4": *[_type == "step4Output"][0]{
           headerTitle, headerText,
           action1Title, action1Text, action1SubText,
           action2Title, action2Text, action2SubText, action2Note, formUrl,
-          closingText
+          closingText,
+          action2ButtonLabel, uploadButtonLabel, uploadedLabel, uploadingLabel
         }
       }`;
 

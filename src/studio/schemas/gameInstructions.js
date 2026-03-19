@@ -13,20 +13,31 @@ export default defineType({
         {
           type: 'object',
           fields: [
-            defineField({name: 'title', title: 'Titolo sezione', type: 'string'}),
-            defineField({name: 'icon', title: 'Icona/Emoji', type: 'string', description: 'Es: 📌, 🧩, ⏱️'}),
+            defineField({
+              name: 'title',
+              title: 'Titolo sezione',
+              type: 'string',
+              description: 'Es. "Lancio", "Regole", "La Mappa"',
+            }),
+            defineField({
+              name: 'icon',
+              title: 'Icona/Emoji',
+              type: 'string',
+              description: 'Es: 🧭, 📌, 🧩, ⏱️',
+            }),
             defineField({
               name: 'content',
               title: 'Contenuto',
               type: 'text',
               rows: 4,
-              description: 'Testo principale della sezione',
+              description: 'Testo principale. Per elenchi puntati usa il campo "Lista punti" sotto.',
             }),
             defineField({
               name: 'items',
               title: 'Lista punti (opzionale)',
               type: 'array',
-              of: [{type: 'string'}],
+              of: [{ type: 'string' }],
+              description: 'Aggiungi un elemento per ogni punto elenco. Lascia vuoto se usi solo il testo sopra.',
             }),
           ],
           preview: {

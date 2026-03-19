@@ -41,6 +41,7 @@ function App() {
             quizAnswers={state.quizAnswers}
             cmsQuestions={content?.quizQuestions}
             cmsProfiles={content?.quizProfiles}
+            cmsConfig={content?.step2Config}
           />
         );
       case 3:
@@ -51,6 +52,7 @@ function App() {
             profile={state.profile}
             cmsFocus={content?.focusCards}
             cmsInstructions={content?.gameInstructions}
+            cmsConfig={content?.step3Config}
           />
         );
       case 4:

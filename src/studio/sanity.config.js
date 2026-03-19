@@ -2,6 +2,7 @@ import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { schemaTypes } from './schemas'
 import { DownloadImagesTool } from './components/DownloadImagesTool'
+import { structure } from './structure'
 
 export default defineConfig({
   name: 'crescere-strumenti-di-pace',
@@ -9,7 +10,7 @@ export default defineConfig({
   projectId: '5l3x7g7u',
   dataset: 'production',
   basePath: '/studio',
-  plugins: [structureTool()],
+  plugins: [structureTool({ structure })],
   tools: [
     {
       name: 'scarica-foto',

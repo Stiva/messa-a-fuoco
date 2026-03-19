@@ -14,6 +14,7 @@ const FALLBACK = {
   closingNote: 'È un lavoro da artigiani, fatto di piccoli gesti e scelte ripetute, finché diventano stile.',
   buttonLabel: 'Zaino in spalla, Inizia!',
   skipToRestitutionLabel: 'Hai già svolto l\'attività? Allora sei pronto per la Restituzione',
+  greeting: 'Cari VVLL e CCAA,',
 };
 
 export default function Step1Intro({ proceed, skipToRestitution, cms }) {
@@ -32,9 +33,7 @@ export default function Step1Intro({ proceed, skipToRestitution, cms }) {
       </p>
 
       <div className="text-left text-green-900 text-base md:text-lg font-medium leading-relaxed space-y-4 mb-8 px-2">
-        <p>
-          Cari <strong>VVLL</strong> e <strong>CCAA</strong>,
-        </p>
+        {d.greeting && <p>{d.greeting}</p>}
         {d.bodyParagraphs.map((p, i) => (
           <p key={i}>{p}</p>
         ))}

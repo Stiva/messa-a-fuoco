@@ -53,7 +53,7 @@ const FALLBACK_FOCUS = {
   }
 };
 
-const tappe = [
+const FALLBACK_TAPPE = [
   "Tappa 1 — Lancio",
   "Tappa 2 — Svolgimento: Fase 1",
   "Tappa 3 — Svolgimento: Fase 2",
@@ -61,9 +61,21 @@ const tappe = [
   "Tappa 5 — Chiusura e Verifica"
 ];
 
-export default function Step3Design({ actions, plan, profile, cmsFocus, cmsInstructions }) {
+const FALLBACK_STEP3_CONFIG = {
+  instructionsTitle: 'La Mappa della Pace — Istruzioni di gioco',
+  formTitle: 'Progetta le 5 Tappe',
+  formSubtitle: 'Per ogni tappa scrivi la prova, il gioco o la sfida che hai in mente. L\'auto-salvataggio è attivo.',
+  textareaPlaceholder: 'Scrivi qui cosa succederà in questa tappa…',
+  saveButtonLabel: 'Scarica Piano e Prosegui',
+  savingLabel: 'Salvataggio e Generazione PDF...',
+  extraSectionTitle: 'Tenete in considerazione anche:',
+};
+
+export default function Step3Design({ actions, plan, profile, cmsFocus, cmsInstructions, cmsConfig }) {
   const focusData = (cmsFocus && Object.keys(cmsFocus).length > 0) ? cmsFocus : FALLBACK_FOCUS;
   const focus = profile ? focusData[profile] : null;
+  const cfg = { ...FALLBACK_STEP3_CONFIG, ...cmsConfig };
+  const tappe = (cmsConfig?.tappe && cmsConfig.tappe.length === 5) ? cmsConfig.tappe : FALLBACK_TAPPE;
   const contentRef = useRef(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
@@ -109,7 +121,7 @@ export default function Step3Design({ actions, plan, profile, cmsFocus, cmsInstr
           </ul>
           {focus.extra && (
             <div className="mt-4 pt-3 border-t-2 border-yellow-600/20 space-y-2 relative z-10">
-              <p className="text-sm font-bold text-green-700">Tenete in considerazione anche:</p>
+              <p className="text-sm font-bold text-green-700">{cfg.extraSectionTitle}</p>
               {focus.extra.map((e, i) => (
                 <p key={i} className="text-sm font-medium">
                   <strong>{e.title}:</strong> {e.note}
@@ -124,61 +136,84 @@ export default function Step3Design({ actions, plan, profile, cmsFocus, cmsInstr
       <div className="card-wood">
         <div className="flex items-center gap-3 mb-4 font-black text-xl text-green-800">
           <Map className="text-green-700 shrink-0" size={28} />
-          <span>🗺️ La Mappa della Pace — Istruzioni di gioco</span>
+          <span>🗺️ {cfg.instructionsTitle}</span>
         </div>
 
         <div className="space-y-4 text-sm md:text-base font-medium text-green-900">
-          <div className="bg-yellow-100/80 rounded-2xl p-4 border-2 border-yellow-500/30">
-            <p className="font-bold text-green-800 mb-2 flex items-center gap-2">
-              <Compass size={18} className="text-green-700" /> Lancio
-            </p>
-            <p>
-              Il gioco si svolge in 5 tappe. Per ogni tappa scegliete una coppia tra le proposte: un <strong>messaggio protagonista</strong> e
-              uno <strong>spunto</strong>. Poi inventate la prova, il gioco o la sfida che faccia vivere quel messaggio.
-            </p>
-          </div>
+          {cmsInstructions?.sections?.length > 0 ? (
+            cmsInstructions.sections.map((section, i) => (
+              <div key={i} className="bg-yellow-100/80 rounded-2xl p-4 border-2 border-yellow-500/30">
+                <p className="font-bold text-green-800 mb-2 flex items-center gap-2">
+                  {section.icon && <span>{section.icon}</span>}
+                  {section.title}
+                </p>
+                {section.content && <p className="whitespace-pre-wrap">{section.content}</p>}
+                {section.items && section.items.length > 0 && (
+                  <ul className="space-y-1 text-sm mt-2">
+                    {section.items.map((item, j) => (
+                      <li key={j}>• {item}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))
+          ) : (
+            <>
+              <div className="bg-yellow-100/80 rounded-2xl p-4 border-2 border-yellow-500/30">
+                <p className="font-bold text-green-800 mb-2 flex items-center gap-2">
+                  <Compass size={18} className="text-green-700" /> Lancio
+                </p>
+                <p>
+                  Il gioco si svolge in 5 tappe. Per ogni tappa scegliete una coppia tra le proposte: un <strong>messaggio protagonista</strong> e
+                  uno <strong>spunto</strong>. Poi inventate la prova, il gioco o la sfida che faccia vivere quel messaggio.
+                </p>
+              </div>
 
-          <div className="bg-yellow-100/80 rounded-2xl p-4 border-2 border-yellow-500/30">
-            <p className="font-bold text-green-800 mb-2">📌 Regole</p>
-            <ul className="space-y-1 text-sm">
-              <li>• In ogni tappa deve emergere un <strong>simbolo dell'esperienza</strong>: niente immagini scaricate, creatività da Branca L/C!</li>
-              <li>• A fine tappa consegnate alla squadra. Il messaggio resta per voi come bussola.</li>
-              <li>• <strong>Segretezza del senso</strong>: i bambini devono vivere il gioco, non indovinare la teoria.</li>
-            </ul>
-          </div>
+              <div className="bg-yellow-100/80 rounded-2xl p-4 border-2 border-yellow-500/30">
+                <p className="font-bold text-green-800 mb-2">📌 Regole</p>
+                <ul className="space-y-1 text-sm">
+                  <li>• In ogni tappa deve emergere un <strong>simbolo dell'esperienza</strong>: niente immagini scaricate, creatività da Branca L/C!</li>
+                  <li>• A fine tappa consegnate alla squadra. Il messaggio resta per voi come bussola.</li>
+                  <li>• <strong>Segretezza del senso</strong>: i bambini devono vivere il gioco, non indovinare la teoria.</li>
+                </ul>
+              </div>
 
-          <div className="bg-yellow-100/80 rounded-2xl p-4 border-2 border-yellow-500/30">
-            <p className="font-bold text-green-800 mb-2">🧩 La Mappa</p>
-            <p className="mb-2">
-              L'ultima fase del gioco consiste nella costruzione della <strong>Mappa della Pace</strong> usando le tessere conquistate:
-            </p>
-            <ul className="space-y-1 text-sm">
-              <li>• Nessuna tessera può restare isolata: ognuna deve toccarne almeno un'altra o essere collegata</li>
-              <li>• Creare <strong>3 "zone"</strong> sulla mappa (le chiamano i L/C, senza suggerimenti)</li>
-              <li>• In ogni zona almeno 1 tessera</li>
-              <li>• Scegliere e contrassegnare: la tessera <strong>più facile</strong>, la <strong>più difficile</strong>, e la tessera <strong>«Che ci serve adesso»</strong></li>
-            </ul>
-          </div>
+              <div className="bg-yellow-100/80 rounded-2xl p-4 border-2 border-yellow-500/30">
+                <p className="font-bold text-green-800 mb-2">🧩 La Mappa</p>
+                <p className="mb-2">
+                  L'ultima fase del gioco consiste nella costruzione della <strong>Mappa della Pace</strong> usando le tessere conquistate:
+                </p>
+                <ul className="space-y-1 text-sm">
+                  <li>• Nessuna tessera può restare isolata: ognuna deve toccarne almeno un'altra o essere collegata</li>
+                  <li>• Creare <strong>3 "zone"</strong> sulla mappa (le chiamano i L/C, senza suggerimenti)</li>
+                  <li>• In ogni zona almeno 1 tessera</li>
+                  <li>• Scegliere e contrassegnare: la tessera <strong>più facile</strong>, la <strong>più difficile</strong>, e la tessera <strong>«Che ci serve adesso»</strong></li>
+                </ul>
+              </div>
 
-          <div className="bg-yellow-100/80 rounded-2xl p-4 border-2 border-yellow-500/30">
-            <p className="font-bold text-green-800 mb-2">⏱️ Le 5 tappe — Svolgimento</p>
-            <ol className="space-y-1 text-sm list-decimal list-inside">
-              <li><strong>Costruzione</strong> — «Avete 5 minuti per costruire la vostra Mappa della Pace»</li>
-              <li><strong>Tour guidato</strong> — Ogni squadra presenta in 30 secondi: zone, tessera facile, difficile, «ci serve adesso»</li>
-              <li><strong>Chiusura lampo</strong> — «La tessera che mi porto a casa è…» (una parola)</li>
-            </ol>
-          </div>
+              <div className="bg-yellow-100/80 rounded-2xl p-4 border-2 border-yellow-500/30">
+                <p className="font-bold text-green-800 mb-2">⏱️ Le 5 tappe — Svolgimento</p>
+                <ol className="space-y-1 text-sm list-decimal list-inside">
+                  <li><strong>Costruzione</strong> — «Avete 5 minuti per costruire la vostra Mappa della Pace»</li>
+                  <li><strong>Tour guidato</strong> — Ogni squadra presenta in 30 secondi: zone, tessera facile, difficile, «ci serve adesso»</li>
+                  <li><strong>Chiusura lampo</strong> — «La tessera che mi porto a casa è…» (una parola)</li>
+                </ol>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
       {/* === PARTE 3: FORM PROGETTAZIONE === */}
       <form onSubmit={handleSave} className="card-wood flex flex-col gap-6">
         <h2 className="text-2xl md:text-3xl font-black text-green-800 flex items-center gap-3 mb-2">
-          📝 Progetta le 5 Tappe
+          📝 {cfg.formTitle}
         </h2>
-        <p className="text-sm font-medium text-green-700 -mt-4">
-          Per ogni tappa scrivi la prova, il gioco o la sfida che hai in mente. L'auto-salvataggio è attivo.
-        </p>
+        {cfg.formSubtitle && (
+          <p className="text-sm font-medium text-green-700 -mt-4">
+            {cfg.formSubtitle}
+          </p>
+        )}
 
         {tappe.map((title, idx) => {
           const key = `tappa${idx + 1}`;
@@ -189,7 +224,7 @@ export default function Step3Design({ actions, plan, profile, cmsFocus, cmsInstr
                 rows="4"
                 value={plan[key]}
                 onChange={(e) => actions.updatePlan(key, e.target.value)}
-                placeholder="Scrivi qui cosa succederà in questa tappa…"
+                placeholder={cfg.textareaPlaceholder}
                 className="input-wood w-full text-base leading-relaxed shadow-md"
               />
             </div>
@@ -200,12 +235,12 @@ export default function Step3Design({ actions, plan, profile, cmsFocus, cmsInstr
           {isGeneratingPDF ? (
             <>
               <Loader2 className="animate-spin" size={24} />
-              Salvataggio e Generazione PDF...
+              {cfg.savingLabel}
             </>
           ) : (
             <>
               <FileCheck size={24} />
-              Scarica Piano e Prosegui
+              {cfg.saveButtonLabel}
             </>
           )}
         </button>

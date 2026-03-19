@@ -1,10 +1,11 @@
 import { createClient } from '@sanity/client';
 
 // Read-only client (no token needed for public datasets)
+// useCdn: false per vedere subito le modifiche da Sanity (la CDN può cachare fino a 60s)
 export const sanityClient = createClient({
   projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
   dataset: import.meta.env.VITE_SANITY_DATASET,
-  useCdn: true,
+  useCdn: false,
   apiVersion: '2024-01-01',
 });
 

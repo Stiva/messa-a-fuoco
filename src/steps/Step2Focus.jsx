@@ -113,9 +113,18 @@ const FALLBACK_PROFILES = {
   }
 };
 
-export default function Step2Focus({ actions, quizAnswers, cmsQuestions, cmsProfiles }) {
+const FALLBACK_CONFIG = {
+  headerTitle: 'Crescere strumenti di Pace',
+  headerSubtitle: 'Per ogni domanda scegli A, B o C',
+  resultTitle: 'Il vostro Focus è:',
+  tieNote: "Se c'è un pareggio, troverete più di un profilo: potete sceglierne uno come focus principale.",
+  proceedButtonLabel: 'Procedi alla Progettazione',
+};
+
+export default function Step2Focus({ actions, quizAnswers, cmsQuestions, cmsProfiles, cmsConfig }) {
   const questions = (cmsQuestions && cmsQuestions.length > 0) ? cmsQuestions : FALLBACK_QUESTIONS;
   const PROFILES = (cmsProfiles && Object.keys(cmsProfiles).length > 0) ? cmsProfiles : FALLBACK_PROFILES;
+  const cfg = { ...FALLBACK_CONFIG, ...cmsConfig };
 
   const answeredCount = questions.filter(q => quizAnswers[q.id]).length;
   const currentQ = Math.min(answeredCount, questions.length - 1);
@@ -148,8 +157,8 @@ export default function Step2Focus({ actions, quizAnswers, cmsQuestions, cmsProf
       <div className="flex items-center gap-2 text-green-800 mb-4 border-b-2 border-yellow-700/20 pb-4">
         <Target size={28} />
         <div>
-          <h2 className="text-2xl font-bold">Crescere strumenti di Pace</h2>
-          <p className="text-sm text-green-700 font-medium">Per ogni domanda scegli A, B o C</p>
+          <h2 className="text-2xl font-bold">{cfg.headerTitle}</h2>
+          <p className="text-sm text-green-700 font-medium">{cfg.headerSubtitle}</p>
         </div>
       </div>
 
@@ -181,7 +190,7 @@ export default function Step2Focus({ actions, quizAnswers, cmsQuestions, cmsProf
         <div className="text-center py-4 animate-in zoom-in space-y-4">
           <div className="text-6xl mb-2">{profile?.emoji || '✨'}</div>
           <h3 className="text-2xl md:text-3xl font-black text-green-800">
-            Il vostro Focus è:
+            {cfg.resultTitle}
           </h3>
           <div className="bg-yellow-200/90 border-l-8 border-green-600 rounded-r-2xl p-4 text-left">
             <p className="text-xl font-black text-green-800 mb-1">
@@ -191,11 +200,13 @@ export default function Step2Focus({ actions, quizAnswers, cmsQuestions, cmsProf
               {profile?.tagline}
             </p>
           </div>
-          <p className="text-base font-medium text-green-700 leading-relaxed">
-            Se c'è un pareggio, troverete più di un profilo: potete sceglierne uno come focus principale.
-          </p>
+          {cfg.tieNote && (
+            <p className="text-base font-medium text-green-700 leading-relaxed">
+              {cfg.tieNote}
+            </p>
+          )}
           <button onClick={actions.nextStep} className="btn-primary py-4 mt-2">
-            Procedi alla Progettazione
+            {cfg.proceedButtonLabel}
             <ArrowRight size={24} />
           </button>
         </div>

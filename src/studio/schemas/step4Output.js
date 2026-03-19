@@ -65,6 +65,30 @@ export default defineType({
       title: 'Testo di chiusura',
       type: 'string',
     }),
+    defineField({
+      name: 'action2ButtonLabel',
+      title: 'Etichetta bottone modulo Capi',
+      type: 'string',
+      description: 'Es. "Compila Modulo di Verifica Capi"',
+    }),
+    defineField({
+      name: 'uploadButtonLabel',
+      title: 'Etichetta bottone carica foto',
+      type: 'string',
+      description: 'Es. "Carica la foto della Mappa della Pace"',
+    }),
+    defineField({
+      name: 'uploadedLabel',
+      title: 'Testo dopo caricamento',
+      type: 'string',
+      description: 'Es. "Foto Caricata! 📸"',
+    }),
+    defineField({
+      name: 'uploadingLabel',
+      title: 'Testo durante caricamento',
+      type: 'string',
+      description: 'Es. "Caricamento in corso..."',
+    }),
   ],
   preview: {
     prepare() {
