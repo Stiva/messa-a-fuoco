@@ -4,6 +4,7 @@ import quizProfile from './quizProfile'
 import step3Focus from './step3Focus'
 import gameInstructions from './gameInstructions'
 import step4Output from './step4Output'
+import mappaPacePhoto from './mappaPacePhoto'
 
 export const schemaTypes = [
   step1Intro,
@@ -12,4 +13,5 @@ export const schemaTypes = [
   step3Focus,
   gameInstructions,
   step4Output,
+  mappaPacePhoto,
 ]

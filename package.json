@@ -12,10 +12,12 @@
   "dependencies": {
     "@sanity/client": "^7.17.0",
     "@tailwindcss/vite": "^4.2.1",
+    "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "html2canvas-pro": "^2.0.2",
     "html2pdf.js": "^0.14.0",
     "jspdf": "^4.2.0",
+    "jszip": "^3.10.1",
     "lucide-react": "^0.577.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",

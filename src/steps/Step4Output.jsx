@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Camera, ExternalLink, CheckCircle2, Users, UserCog } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Camera, ExternalLink, CheckCircle2, Users, UserCog, Loader2 } from 'lucide-react';
+import { sanityClient } from '../lib/sanity';
 
 // Hardcoded fallback
 const FALLBACK = {
@@ -19,6 +20,39 @@ const FALLBACK = {
 export default function Step4Output({ cms }) {
   const d = { ...FALLBACK, ...cms };
   const [photoLoaded, setPhotoLoaded] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      const imageAsset = await sanityClient.assets.upload('image', file, {
+        filename: file.name
+      });
+      
+      await sanityClient.create({
+        _type: 'mappaPacePhoto',
+        title: `Caricata il ${new Date().toLocaleString('it-IT')}`,
+        image: {
+          _type: 'image',
+          asset: {
+            _type: 'reference',
+            _ref: imageAsset._id
+          }
+        }
+      });
+      
+      setPhotoLoaded(true);
+    } catch (err) {
+      console.error('Errore durante il caricamento:', err);
+      alert('Si è verificato un errore durante il caricamento della foto. Riprova.');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <div className="w-full max-w-lg mx-auto animate-in fade-in zoom-in duration-500 space-y-6">
@@ -47,17 +81,30 @@ export default function Step4Output({ cms }) {
           <p className="text-sm">{d.action1SubText}</p>
         </div>
         <div className="mt-5">
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            disabled={photoLoaded || uploading}
+          />
           <button
-            onClick={() => setPhotoLoaded(true)}
-            disabled={photoLoaded}
+            onClick={() => fileInputRef.current?.click()}
+            disabled={photoLoaded || uploading}
             className={`w-full font-bold py-4 px-6 rounded-3xl shadow-md transform transition-all duration-300 active:scale-95 text-lg flex items-center justify-center gap-3
-              ${photoLoaded
+              ${(photoLoaded || uploading)
                 ? 'bg-green-100 text-green-800 ring-4 ring-green-400 cursor-not-allowed shadow-inner'
                 : 'bg-yellow-400 hover:bg-yellow-500 text-green-900 border-b-4 border-yellow-600 hover:border-yellow-700 hover:-translate-y-1'
               }`}
           >
-            <Camera size={22} />
-            {photoLoaded ? "Foto Caricata! 📸" : "Carica la foto della Mappa della Pace"}
+            {uploading ? (
+              <><Loader2 className="animate-spin" size={22} /> Caricamento in corso...</>
+            ) : photoLoaded ? (
+              <><Camera size={22} /> Foto Caricata! 📸</>
+            ) : (
+              <><Camera size={22} /> Carica la foto della Mappa della Pace</>
+            )}
           </button>
         </div>
       </div>
