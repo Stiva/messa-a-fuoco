@@ -54,8 +54,8 @@ export default defineType({
       name: 'buttonLabel',
       title: 'Etichetta bottone principale',
       type: 'string',
-      group: 'actions',
-      description: 'Es. "Zaino in spalla, Inizia!"',
+      group: 'main',
+      description: 'Es. "Zaino in spalla, Inizia!" o "Zaino in spalla, si comincia!"',
     }),
     defineField({
       name: 'skipToRestitutionLabel',
