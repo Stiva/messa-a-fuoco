@@ -25,9 +25,9 @@ export default defineType({
     }),
     defineField({
       name: 'textareaPlaceholder',
-      title: 'Placeholder testo tappe',
+      title: 'Placeholder predefinito (globale)',
       type: 'string',
-      description: 'Es. "Scrivi qui cosa succederà in questa tappa…"',
+      description: 'Usato solo se una tappa non ha un proprio "Testo suggerito", o per documenti vecchi con solo elenco etichette.',
     }),
     defineField({
       name: 'saveButtonLabel',
@@ -48,12 +48,41 @@ export default defineType({
       description: 'Es. "Tenete in considerazione anche:"',
     }),
     defineField({
+      name: 'planSteps',
+      title: 'Tappe del piano',
+      type: 'array',
+      description:
+        'Aggiungi quante tappe vuoi. Ordine = ordine in pagina. Ogni voce ha titolo e testo suggerito (placeholder) proprio.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'label',
+              title: 'Titolo / etichetta',
+              type: 'string',
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: 'placeholder',
+              title: 'Testo suggerito (placeholder)',
+              type: 'string',
+              description: 'Appare dentro il campo vuoto. Lascia vuoto per usare il placeholder globale sopra.',
+            }),
+          ],
+          preview: {
+            select: { title: 'label', subtitle: 'placeholder' },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'tappe',
-      title: 'Etichette delle 5 tappe',
+      title: 'Etichette tappe (solo compatibilità)',
       type: 'array',
       of: [{ type: 'string' }],
-      validation: (r) => r.length(5).error('Servono esattamente 5 etichette (una per tappa)'),
-      description: 'Ordine: Tappa 1, 2, 3, 4, 5',
+      hidden: true,
+      description: 'Deprecato: usa "Tappe del piano". Nascosto in Studio; i dati vecchi restano leggibili.',
     }),
   ],
   preview: {

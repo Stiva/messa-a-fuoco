@@ -53,6 +53,7 @@ function App() {
             cmsFocus={content?.focusCards}
             cmsInstructions={content?.gameInstructions}
             cmsConfig={content?.step3Config}
+            syncPlanKeys={actions.syncPlanKeys}
           />
         );
       case 4:

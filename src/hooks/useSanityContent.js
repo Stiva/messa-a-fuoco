@@ -65,7 +65,9 @@ export default function useSanityContent() {
         },
         "step3Config": *[_type == "step3DesignConfig"][0]{
           instructionsTitle, formTitle, formSubtitle, textareaPlaceholder,
-          saveButtonLabel, savingLabel, extraSectionTitle, tappe
+          saveButtonLabel, savingLabel, extraSectionTitle,
+          planSteps[]{ _key, label, placeholder },
+          tappe
         },
         "step4": *[_type == "step4Output"][0]{
           headerTitle, headerText,

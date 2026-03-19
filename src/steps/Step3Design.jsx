@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { BookOpen, FileCheck, Map, Compass, Loader2 } from 'lucide-react';
 
 // Hardcoded fallback
@@ -53,13 +53,38 @@ const FALLBACK_FOCUS = {
   }
 };
 
-const FALLBACK_TAPPE = [
-  "Tappa 1 — Lancio",
-  "Tappa 2 — Svolgimento: Fase 1",
-  "Tappa 3 — Svolgimento: Fase 2",
-  "Tappa 4 — Svolgimento: Fase Finale / Climax",
-  "Tappa 5 — Chiusura e Verifica"
+const FALLBACK_TAPPE_LABELS = [
+  'Tappa 1 — Lancio',
+  'Tappa 2 — Svolgimento: Fase 1',
+  'Tappa 3 — Svolgimento: Fase 2',
+  'Tappa 4 — Svolgimento: Fase Finale / Climax',
+  'Tappa 5 — Chiusura e Verifica',
 ];
+
+/** Normalizza tappe da CMS: planSteps (nuovo) o tappe[] (legacy). */
+function getPlanStepsFromConfig(cmsConfig, defaultPlaceholder) {
+  const globalPh = (cmsConfig?.textareaPlaceholder || defaultPlaceholder || '').trim()
+    ? cmsConfig?.textareaPlaceholder || defaultPlaceholder
+    : defaultPlaceholder;
+  if (cmsConfig?.planSteps?.length > 0) {
+    return cmsConfig.planSteps.map((s) => ({
+      key: s._key,
+      label: s.label,
+      placeholder:
+        s.placeholder && String(s.placeholder).trim()
+          ? s.placeholder
+          : globalPh,
+    }));
+  }
+  if (cmsConfig?.tappe?.length > 0) {
+    return cmsConfig.tappe.map((label, i) => ({
+      key: `legacy_${i}`,
+      label,
+      placeholder: globalPh,
+    }));
+  }
+  return null;
+}
 
 const FALLBACK_STEP3_CONFIG = {
   instructionsTitle: 'La Mappa della Pace — Istruzioni di gioco',
@@ -71,11 +96,44 @@ const FALLBACK_STEP3_CONFIG = {
   extraSectionTitle: 'Tenete in considerazione anche:',
 };
 
-export default function Step3Design({ actions, plan, profile, cmsFocus, cmsInstructions, cmsConfig }) {
-  const focusData = (cmsFocus && Object.keys(cmsFocus).length > 0) ? cmsFocus : FALLBACK_FOCUS;
+export default function Step3Design({
+  actions,
+  plan,
+  profile,
+  cmsFocus,
+  cmsInstructions,
+  cmsConfig,
+  syncPlanKeys,
+}) {
+  const focusData =
+    cmsFocus && Object.keys(cmsFocus).length > 0 ? cmsFocus : FALLBACK_FOCUS;
   const focus = profile ? focusData[profile] : null;
   const cfg = { ...FALLBACK_STEP3_CONFIG, ...cmsConfig };
-  const tappe = (cmsConfig?.tappe && cmsConfig.tappe.length === 5) ? cmsConfig.tappe : FALLBACK_TAPPE;
+
+  const planSteps = useMemo(() => {
+    const fromCms = getPlanStepsFromConfig(
+      cmsConfig,
+      FALLBACK_STEP3_CONFIG.textareaPlaceholder
+    );
+    if (fromCms) return fromCms;
+    return FALLBACK_TAPPE_LABELS.map((label, i) => ({
+      key: `fallback_${i}`,
+      label,
+      placeholder: FALLBACK_STEP3_CONFIG.textareaPlaceholder,
+    }));
+  }, [cmsConfig]);
+
+  const planStepKeysSig = useMemo(
+    () => planSteps.map((s) => s.key).join('|'),
+    [planSteps]
+  );
+
+  useEffect(() => {
+    if (syncPlanKeys && planSteps.length > 0) {
+      syncPlanKeys(planSteps.map((s) => s.key));
+    }
+  }, [planStepKeysSig, syncPlanKeys, planSteps]);
+
   const contentRef = useRef(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
@@ -215,21 +273,20 @@ export default function Step3Design({ actions, plan, profile, cmsFocus, cmsInstr
           </p>
         )}
 
-        {tappe.map((title, idx) => {
-          const key = `tappa${idx + 1}`;
-          return (
-            <div key={key} className="relative">
-              <label className="block font-bold text-green-800 text-base md:text-lg mb-2 ml-1">{title}</label>
-              <textarea
-                rows="4"
-                value={plan[key]}
-                onChange={(e) => actions.updatePlan(key, e.target.value)}
-                placeholder={cfg.textareaPlaceholder}
-                className="input-wood w-full text-base leading-relaxed shadow-md"
-              />
-            </div>
-          );
-        })}
+        {planSteps.map((step) => (
+          <div key={step.key} className="relative">
+            <label className="block font-bold text-green-800 text-base md:text-lg mb-2 ml-1">
+              {step.label}
+            </label>
+            <textarea
+              rows="4"
+              value={plan[step.key] ?? ''}
+              onChange={(e) => actions.updatePlan(step.key, e.target.value)}
+              placeholder={step.placeholder}
+              className="input-wood w-full text-base leading-relaxed shadow-md"
+            />
+          </div>
+        ))}
 
         <button type="submit" disabled={isGeneratingPDF} className="btn-primary mt-4 text-xl py-4 flex items-center justify-center gap-2 disabled:bg-green-600 disabled:opacity-80 disabled:cursor-wait">
           {isGeneratingPDF ? (
