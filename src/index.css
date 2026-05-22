@@ -34,36 +34,84 @@
   }
 }
 
+/* Print/Screen utilities (used by PDF export) */
+.print-only {
+  display: none;
+}
+
 /* Print CSS for Step 3 PDF Export */
 @media print {
+  @page {
+    size: A4;
+    margin: 1.2cm;
+  }
+
+  html,
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .screen-only {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+
   body.printing-step3 {
     background: white;
   }
+
   body.printing-step3 header,
   body.printing-step3 footer,
-  body.printing-step3 button,
-  body.printing-step3 .progress-path-container {
+  body.printing-step3 button {
     display: none !important;
   }
-  
+
+  /* Neutralize full-height layout so print doesn't leave a blank first page */
+  body.printing-step3 .min-h-screen {
+    min-height: 0 !important;
+  }
+
   body.printing-step3 main {
     margin: 0 !important;
     padding: 0 !important;
   }
-  
-  body.printing-step3 .card-wood {
-    box-shadow: none !important;
-    border: 2px solid #e5e7eb !important;
+
+  /* Keep each card on one page when possible */
+  body.printing-step3 .card-wood,
+  body.printing-step3 .plan-step {
     break-inside: avoid;
-    margin-bottom: 2rem;
+    page-break-inside: avoid;
+    margin-bottom: 0.75rem;
   }
 
-  body.printing-step3 textarea {
-    border: none !important;
-    background: #fefce8 !important; /* yellow-50 */
+  body.printing-step3 .card-wood {
     box-shadow: none !important;
-    resize: none !important;
-    height: auto !important;
-    overflow: visible !important;
+    border: 2px solid #c0a062 !important;
+  }
+
+  /* Don't orphan a heading at the bottom of a page */
+  body.printing-step3 h1,
+  body.printing-step3 h2,
+  body.printing-step3 h3,
+  body.printing-step3 label {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Readable, expanding text block that replaces the textarea in print */
+  body.printing-step3 .print-textarea {
+    background: #fefce8;
+    border: 1px solid #c0a062;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    min-height: 4.5rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font: inherit;
+    color: #14532d;
+    line-height: 1.5;
   }
 }
