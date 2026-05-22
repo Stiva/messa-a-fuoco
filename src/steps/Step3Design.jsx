@@ -274,7 +274,7 @@ export default function Step3Design({
         )}
 
         {planSteps.map((step) => (
-          <div key={step.key} className="relative">
+          <div key={step.key} className="relative plan-step">
             <label className="block font-bold text-green-800 text-base md:text-lg mb-2 ml-1">
               {step.label}
             </label>
@@ -283,8 +283,11 @@ export default function Step3Design({
               value={plan[step.key] ?? ''}
               onChange={(e) => actions.updatePlan(step.key, e.target.value)}
               placeholder={step.placeholder}
-              className="input-wood w-full text-base leading-relaxed shadow-md"
+              className="input-wood w-full text-base leading-relaxed shadow-md screen-only"
             />
+            <div className="print-only print-textarea" aria-hidden="true">
+              {plan[step.key]?.trim() || ' '}
+            </div>
           </div>
         ))}
 
